@@ -1,6 +1,13 @@
 package com.thealgorithms.others;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.PriorityQueue;
 
 /**
  * A* (A-Star) Search Algorithm implementation for finding the shortest path
@@ -26,7 +33,10 @@ import java.util.*;
  *
  * @author Suraj Devatha
  */
-public class AStarSearch {
+public final class AStarSearch {
+
+    private AStarSearch() {
+    }
 
     /**
      * Finds shortest path using A*.
@@ -37,20 +47,13 @@ public class AStarSearch {
      * @param heuristic heuristic function
      * @return list of nodes representing shortest path
      */
-    public static List<Node> findPath(
-            Map<Node, List<Edge>> graph,
-            Node start,
-            Node goal,
-            Heuristic heuristic
-    ) {
+    public static List<Node> findPath(Map<Node, List<Edge>> graph, Node start, Node goal, Heuristic heuristic) {
 
         Map<Node, Double> gScore = new HashMap<>();
         Map<Node, Double> fScore = new HashMap<>();
         Map<Node, Node> cameFrom = new HashMap<>();
 
-        PriorityQueue<Node> openSet = new PriorityQueue<>(
-                Comparator.comparingDouble(fScore::get)
-        );
+        PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingDouble(fScore::get));
 
         gScore.put(start, 0.0);
         fScore.put(start, heuristic.estimate(start, goal));
@@ -118,8 +121,12 @@ public class AStarSearch {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Node)) return false;
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Node)) {
+                return false;
+            }
             Node node = (Node) o;
             return Objects.equals(id, node.id);
         }

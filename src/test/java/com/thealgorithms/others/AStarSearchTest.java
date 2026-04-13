@@ -1,12 +1,15 @@
 package com.thealgorithms.others;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for AStarSearch algorithm.
@@ -18,82 +21,70 @@ class AStarSearchTest {
      */
     private static final AStarSearch.Heuristic ZERO_HEURISTIC = (node, goal) -> 0;
     private static Map<AStarSearch.Node, List<AStarSearch.Edge>> graph;
-    private static AStarSearch.Node A;
-    private static AStarSearch.Node B;
-    private static AStarSearch.Node C;
-    private static AStarSearch.Node D;
+
+    private static AStarSearch.Node nodeA;
+    private static AStarSearch.Node nodeB;
+    private static AStarSearch.Node nodeC;
+    private static AStarSearch.Node nodeD;
 
     @BeforeAll
     static void setUp() {
         graph = new HashMap<>();
 
-        A = new AStarSearch.Node("A");
-        B = new AStarSearch.Node("B");
-        C = new AStarSearch.Node("C");
-        D = new AStarSearch.Node("D");
+        nodeA = new AStarSearch.Node("A");
+        nodeB = new AStarSearch.Node("B");
+        nodeC = new AStarSearch.Node("C");
+        nodeD = new AStarSearch.Node("D");
 
-        graph.put(A, Arrays.asList(
-                new AStarSearch.Edge(B, 1),
-                new AStarSearch.Edge(C, 4)
-        ));
+        graph.put(nodeA, Arrays.asList(new AStarSearch.Edge(nodeB, 1), new AStarSearch.Edge(nodeC, 4)));
 
-        graph.put(B, Arrays.asList(
-                new AStarSearch.Edge(C, 2),
-                new AStarSearch.Edge(D, 5)
-        ));
+        graph.put(nodeB, Arrays.asList(new AStarSearch.Edge(nodeC, 2), new AStarSearch.Edge(nodeD, 5)));
 
-        graph.put(C, Arrays.asList(
-                new AStarSearch.Edge(D, 1)
-        ));
+        graph.put(nodeC, Arrays.asList(new AStarSearch.Edge(nodeD, 1)));
 
-        graph.put(D, Collections.emptyList());
+        graph.put(nodeD, Collections.emptyList());
     }
 
     @Test
     void testPathExists() {
-        List<AStarSearch.Node> path =
-                AStarSearch.findPath(graph, A, D, ZERO_HEURISTIC);
+        List<AStarSearch.Node> path = AStarSearch.findPath(graph, nodeA, nodeD, ZERO_HEURISTIC);
 
         // Expected shortest path: A -> B -> C -> D
-        List<AStarSearch.Node> expected = Arrays.asList(A, B, C, D);
+        List<AStarSearch.Node> expected = Arrays.asList(nodeA, nodeB, nodeC, nodeD);
 
         assertEquals(expected, path);
     }
 
     @Test
     void testDirectPath() {
-        List<AStarSearch.Node> path =
-                AStarSearch.findPath(graph, A, B, ZERO_HEURISTIC);
+        List<AStarSearch.Node> path = AStarSearch.findPath(graph, nodeA, nodeB, ZERO_HEURISTIC);
 
-        List<AStarSearch.Node> expected = Arrays.asList(A, B);
+        List<AStarSearch.Node> expected = Arrays.asList(nodeA, nodeB);
 
         assertEquals(expected, path);
     }
 
     @Test
     void testStartEqualsGoal() {
-        List<AStarSearch.Node> path =
-                AStarSearch.findPath(graph, A, A, ZERO_HEURISTIC);
+        List<AStarSearch.Node> path = AStarSearch.findPath(graph, nodeA, nodeA, ZERO_HEURISTIC);
 
-        List<AStarSearch.Node> expected = Collections.singletonList(A);
+        List<AStarSearch.Node> expected = Collections.singletonList(nodeA);
 
         assertEquals(expected, path);
     }
 
     @Test
     void testNoPathExists() {
-        AStarSearch.Node E = new AStarSearch.Node("E");
+        AStarSearch.Node nodeE = new AStarSearch.Node("nodeE");
 
-        List<AStarSearch.Node> path =
-                AStarSearch.findPath(graph, E, A, ZERO_HEURISTIC);
+        List<AStarSearch.Node> path = AStarSearch.findPath(graph, nodeE, nodeA, ZERO_HEURISTIC);
 
         assertTrue(path.isEmpty());
     }
 
     @Test
     void testPathCostOptimality() {
-        List<AStarSearch.Node> path =
-                AStarSearch.findPath(graph, A, D, ZERO_HEURISTIC);
+        List<AStarSearch.Node> path = AStarSearch.findPath(graph, nodeA, nodeD, ZERO_HEURISTIC);
 
         // Calculate total cost
         double cost = calculatePathCost(path);
